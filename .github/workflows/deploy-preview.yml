@@ -22,17 +22,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Prepare dependency-free preview
-        run: |
-          mkdir -p _site/src
-          cp preview.html _site/index.html
-          cp src/styles.css _site/src/styles.css
-          touch _site/.nojekyll
-          test -s _site/src/styles.css
-          ! grep -qE '(href|src)="/' _site/index.html
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - name: Build production preview
+        env:
+          VITE_SUPABASE_URL: ${{ vars.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ vars.VITE_SUPABASE_ANON_KEY }}
+        run: npm ci && npm run build
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: _site
+          path: dist
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
