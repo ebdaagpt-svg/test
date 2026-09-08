@@ -28,6 +28,15 @@ npm run preview
 ثم افتح `http://localhost:4173`. ولإيقاف أي من خادمي المعاينة اضغط `Ctrl+C` في
 الطرفية.
 
+إذا لم تتوفر حزم npm في بيئة المعاينة، شغّل النسخة التفاعلية المستقلة دون تثبيت:
+
+```bash
+npm run dev:preview
+```
+
+ثم افتح `http://localhost:4173/preview.html`. هذه النسخة مخصصة لتجربة الشاشات
+والتنقل فقط ولا تتصل بحساب Google أو Supabase الحقيقي.
+
 أنشئ OAuth Client من Google Cloud، وفعّل Google Drive API وGoogle Sheets API، ثم أضف النطاق المحلي ونطاق الإنتاج إلى **Authorized JavaScript origins**. عند غياب `VITE_GOOGLE_CLIENT_ID` تعمل الواجهة في وضع العرض التجريبي لتسهيل المعاينة.
 
 ## إعداد Supabase
