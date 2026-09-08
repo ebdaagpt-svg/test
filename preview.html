@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>راء | معاينة ربط Google Sheets</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;600;700;800&display=swap">
+  <link rel="stylesheet" href="/src/styles.css">
+  <style>.preview-note{position:fixed;left:18px;bottom:18px;background:#292522;color:#fff;padding:9px 14px;border-radius:20px;font:12px Tajawal;z-index:5}.preview-svg{font-size:20px;width:22px;text-align:center}.file-list button{width:100%}.hide{display:none!important}</style>
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar">
+    <div class="brand"><span>ر</span><div><strong>راء</strong><small>إدارة العيادات</small></div></div>
+    <nav><a><i class="preview-svg">⌂</i>الرئيسية</a><a><i class="preview-svg">♙</i>العملاء المحتملون</a><a class="active"><i class="preview-svg">↗</i>التكاملات</a><a><i class="preview-svg">▤</i>مصادر البيانات</a><a><i class="preview-svg">⚙</i>الإعدادات</a></nav>
+    <div class="sidebar-help"><i class="preview-svg">?</i><strong>تحتاج مساعدة؟</strong><small>تواصل مع فريق الدعم</small><button>مركز المساعدة</button></div>
+    <div class="profile"><div class="avatar">من</div><div><b>محمد النعيمي</b><small>مدير الحساب</small></div><span>↪</span></div>
+  </aside>
+  <main><header><div class="header-actions"><button class="icon">♧<i></i></button><div class="avatar">من</div><span>⌄</span></div></header>
+    <section class="page">
+      <div class="crumb">التكاملات <span>/</span> Google Sheets</div>
+      <div class="title-row"><div><h1>ربط Google Sheets</h1><p>اربط ملفك واستقبل العملاء المحتملين تلقائياً في منصة راء.</p></div><span class="secure">✓ اتصال آمن ومشفّر</span></div>
+      <div class="steps" id="steps"></div>
+      <div class="card">
+        <div class="center-panel screen" data-screen="1"><div class="google-sheet"><span class="preview-svg">▦</span></div><h2>ابدأ بربط حساب Google</h2><p>سنطلب صلاحية القراءة فقط لملفات Google Sheets. لن نقوم بتعديل أو حذف أي بيانات من حسابك.</p><button class="google-btn" onclick="go(2)"><span class="google-g">G</span>المتابعة باستخدام Google</button><div class="permission">✓<span><b>صلاحية قراءة فقط</b><small>يمكنك إلغاء الربط في أي وقت من الإعدادات.</small></span></div></div>
+        <div class="form-panel screen hide" data-screen="2"><div class="section-heading"><div class="sheet-small">▦</div><div><h2>اختر ملف Google Sheets</h2><p>حدد الملف والصفحة التي تصل إليها بيانات العملاء الجدد.</p></div></div><label>ملف Google Sheets</label><div class="file-list"><button class="selected"><span class="preview-svg">▦</span><span><b>Leads - September 2026</b><small>آخر تعديل اليوم</small></span><span style="margin-right:auto">✓</span></button></div><label>الصفحة (Tab)</label><select><option>عملاء الإعلانات</option><option>الأرشيف</option></select><div class="card-footer"><button class="secondary" onclick="go(1)">السابق</button><button class="primary" onclick="go(3)">متابعة</button></div></div>
+        <div class="form-panel mapping screen hide" data-screen="3"><div class="section-heading"><div class="sheet-small">↻</div><div><h2>طابق حقول البيانات</h2><p>اختر الحقل المناظر في منصة راء لكل عمود من ملفك.</p></div><span class="count">5 من 5 حقول</span></div><div class="mapping-head"><span>عمود Google Sheets</span><span>حقل منصة راء</span></div><div id="mapping"></div><div class="card-footer"><button class="secondary" onclick="go(2)">السابق</button><button class="primary" onclick="go(4)">حفظ وتفعيل المزامنة</button></div></div>
+        <div class="center-panel success screen hide" data-screen="4"><div class="success-icon">✓</div><span class="success-label">تم التفعيل بنجاح</span><h2>المزامنة تعمل الآن</h2><p>سيتم فحص الصفوف الجديدة وإضافتها إلى قائمة العملاء المحتملين بشكل تلقائي.</p><div class="sync-info"><div><small>الملف المتصل</small><b>Leads - September 2026</b></div><div><small>الصفحة</small><b>عملاء الإعلانات</b></div><div><small>حالة المزامنة</small><b class="green"><i></i> نشطة</b></div></div><button class="primary">عرض العملاء المحتملين</button><button class="text-btn" onclick="go(3)">تعديل مطابقة الحقول</button></div>
+      </div><p class="privacy">هذه معاينة تجريبية ولا تتصل ببيانات حقيقية.</p>
+    </section>
+  </main>
+</div><div class="preview-note">وضع المعاينة التفاعلية</div>
+<script>
+const labels=['ربط حساب Google','اختيار الملف والصفحة','مطابقة الحقول','تفعيل المزامنة'];let current=1;
+const fields=[['الاسم','الاسم الكامل'],['رقم الجوال','رقم الهاتف'],['الخدمة المطلوبة','الخدمة'],['الطبيب','الطبيب'],['الحملة الإعلانية','مصدر العميل']];
+document.querySelector('#mapping').innerHTML=fields.map((x,i)=>`<div class="mapping-row"><div><span class="col-letter">${String.fromCharCode(65+i)}</span><b>${x[0]}</b></div><span class="arrow">←</span><select><option>${x[1]}</option><option>تجاهل هذا الحقل</option></select></div>`).join('');
+function render(){document.querySelector('#steps').innerHTML=labels.map((x,i)=>`<div class="${current>i+1?'done':''} ${current===i+1?'current':''}"><span>${current>i+1?'✓':i+1}</span><b>${x}</b></div>`).join('');document.querySelectorAll('.screen').forEach(x=>x.classList.toggle('hide',Number(x.dataset.screen)!==current));}
+function go(step){current=step;render();window.scrollTo({top:0,behavior:'smooth'});}render();
+</script></body></html>
