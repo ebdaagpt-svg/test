@@ -25,10 +25,10 @@ npm run build
 npm run preview
 ```
 
-ثم افتح `http://localhost:4173`. ولإيقاف أي من خادمي المعاينة اضغط `Ctrl+C` في
-الطرفية.
+ثم افتح `http://localhost:4173`. يفتح المسار الرئيسي المعاينة التفاعلية مباشرة،
+ولا يحتاج أمر `preview` إلى تثبيت حزم npm. ولإيقاف الخادم اضغط `Ctrl+C` في الطرفية.
 
-إذا لم تتوفر حزم npm في بيئة المعاينة، شغّل النسخة التفاعلية المستقلة دون تثبيت:
+يمكن أيضاً تشغيل النسخة التفاعلية المستقلة بالأمر البديل:
 
 ```bash
 npm run dev:preview
@@ -36,6 +36,20 @@ npm run dev:preview
 
 ثم افتح `http://localhost:4173/preview.html`. هذه النسخة مخصصة لتجربة الشاشات
 والتنقل فقط ولا تتصل بحساب Google أو Supabase الحقيقي.
+
+## رابط معاينة عام
+
+يتضمن المستودع Workflow باسم **Deploy interactive preview** ينشر المعاينة الثابتة
+إلى GitHub Pages دون npm أو مفاتيح سرية. بعد دفع الفرع إلى GitHub:
+
+1. افتح **Settings → Pages** واختر **GitHub Actions** كمصدر النشر.
+2. افتح **Actions → Deploy interactive preview → Run workflow**.
+3. يظهر الرابط العام في خانة `github-pages` داخل نتيجة الـ workflow، ويكون عادةً
+   `https://<owner>.github.io/<repository>/`.
+
+لا يحتوي هذا الرابط على Google أو Supabase credentials؛ فهو مخصص لتجربة واجهة
+المستخدم فقط. يلزم نشر التطبيق الفعلي وإضافة نطاقه إلى Google OAuth لاختبار الربط
+الحقيقي.
 
 أنشئ OAuth Client من Google Cloud، وفعّل Google Drive API وGoogle Sheets API، ثم أضف النطاق المحلي ونطاق الإنتاج إلى **Authorized JavaScript origins**. عند غياب `VITE_GOOGLE_CLIENT_ID` تعمل الواجهة في وضع العرض التجريبي لتسهيل المعاينة.
 
