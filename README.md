@@ -30,8 +30,7 @@ npm run preview
 ## رابط معاينة عام
 
 يتضمن المستودع Workflow باسم **Deploy interactive preview** ينشر المعاينة الثابتة
-إلى GitHub Pages. أضف `VITE_GOOGLE_CLIENT_ID` في **Settings → Secrets and variables
-→ Actions → Variables** ثم ادفع الفرع إلى GitHub:
+إلى GitHub Pages ويضمّن Google OAuth Client ID العام أثناء البناء. بعد دفع الفرع إلى GitHub:
 
 1. افتح **Settings → Pages** واختر **GitHub Actions** كمصدر النشر.
 2. افتح **Actions → Deploy interactive preview → Run workflow**.
