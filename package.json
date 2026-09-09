@@ -1,5 +1,5 @@
 {
-  "name": "raa-google-sheets-integration",
+  "name": "google-sheets-reader",
   "private": true,
   "version": "1.0.0",
   "type": "module",

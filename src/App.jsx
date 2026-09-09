@@ -3,7 +3,7 @@ import { ArrowRight, Check, ChevronDown, FileSpreadsheet, LogOut, RefreshCw, Sea
 import { connectGoogle, hasGoogleConfig, listSpreadsheets, listTabs, readSheet } from './googleSheets';
 
 export function App() {
-  const [mode, setMode] = useState(null);
+  const [connected, setConnected] = useState(false);
   const [token, setToken] = useState(null);
   const [files, setFiles] = useState([]);
   const [tabs, setTabs] = useState([]);
@@ -28,35 +28,36 @@ export function App() {
     setLoading(true); setError('');
     try {
       const connection = await connectGoogle();
-      setMode(connection.mode); setToken(connection.token);
-      setFiles(await listSpreadsheets(connection.mode, connection.token));
-    } catch {
-      setMode('mock'); setToken(null);
-      setFiles(await listSpreadsheets('mock', null));
+      setToken(connection.token);
+      setFiles(await listSpreadsheets(connection.token));
+      setConnected(true);
+    } catch (e) {
+      setError(e.message || 'تعذّر تسجيل الدخول باستخدام Google');
     } finally { setLoading(false); }
   };
 
   const chooseFile = selected => run(async () => {
     setFile(selected); setTab(null); setRows([]); setQuery('');
-    setTabs(await listTabs(mode, token, selected.id));
+    setTabs(await listTabs(token, selected.id));
   });
 
   const chooseTab = selected => run(async () => {
     setTab(selected); setQuery('');
-    setRows(await readSheet(mode, token, file.id, selected.title));
+    setRows(await readSheet(token, file.id, selected.title));
   });
 
-  const reset = () => { setMode(null); setToken(null); setFiles([]); setTabs([]); setFile(null); setTab(null); setRows([]); setQuery(''); setError(''); };
-  const refresh = () => tab && run(async () => setRows(await readSheet(mode, token, file.id, tab.title)));
+  const reset = () => { setConnected(false); setToken(null); setFiles([]); setTabs([]); setFile(null); setTab(null); setRows([]); setQuery(''); setError(''); };
+  const refresh = () => tab && run(async () => setRows(await readSheet(token, file.id, tab.title)));
 
-  if (!mode) return <main className="welcome-shell">
+  if (!connected) return <main className="welcome-shell">
     <section className="welcome-card">
       <div className="logo-mark"><FileSpreadsheet /></div>
       <span className="eyebrow">Google Sheets Reader</span>
       <h1>استعرض جداولك<br />بوضوح وبساطة</h1>
       <p>سجّل الدخول بحساب Google واختر أي ملف لعرض صفوفه وأعمدته مباشرة، دون رفع البيانات أو تخزينها.</p>
       <button className="google-btn" onClick={login} disabled={loading}><span className="google-g">G</span>{loading ? 'جارٍ فتح الملفات...' : 'المتابعة باستخدام Google'}</button>
-      {!hasGoogleConfig && <div className="demo-note"><span>وضع المعاينة</span> سيتم فتح ملف تجريبي تلقائياً لأن مفاتيح Google غير متاحة.</div>}
+      {!hasGoogleConfig && <div className="demo-note"><span>إعداد مطلوب</span> يجب إضافة Google OAuth Client ID لتسجيل الدخول الحقيقي.</div>}
+      {error && <div className="error inline"><X />{error}</div>}
       <div className="trust-row"><ShieldCheck /><span><b>قراءة فقط</b><small>لا نعدّل ملفاتك ولا نخزن بياناتها.</small></span></div>
     </section>
   </main>;
@@ -64,13 +65,13 @@ export function App() {
   return <div className="viewer-shell" dir="rtl">
     <header className="viewer-header">
       <div className="viewer-brand"><span><FileSpreadsheet /></span><div><b>Sheets Reader</b><small>قارئ جداول Google</small></div></div>
-      <div className="header-status"><span className={mode === 'mock' ? 'mock-badge' : 'live-badge'}>{mode === 'mock' ? 'معاينة تجريبية' : 'متصل بـ Google'}</span><button className="logout-btn" onClick={reset}><LogOut /> خروج</button></div>
+      <div className="header-status"><span className="live-badge">متصل بـ Google</span><button className="logout-btn" onClick={reset}><LogOut /> خروج</button></div>
     </header>
     <main className="workspace">
       <aside className="file-panel">
         <div className="panel-title"><div><h2>ملفاتي</h2><span>{files.length} ملف</span></div></div>
         <div className="file-search"><Search /><input placeholder="ابحث عن ملف..." /></div>
-        <div className="files">{files.map(item => <button key={item.id} className={file?.id === item.id ? 'active' : ''} onClick={() => chooseFile(item)}><FileSpreadsheet /><span><b>{item.name}</b><small>عُدّل {new Date(item.modifiedTime).toLocaleDateString('ar-EG')}</small></span>{file?.id === item.id && <Check />}</button>)}</div>
+        <div className="files">{files.length === 0 ? <div className="files-empty"><FileSpreadsheet /><b>لا توجد ملفات Google Sheets في حسابك</b><span>لم نعثر على ملفات تملكها بهذا الحساب.</span></div> : files.map(item => <button key={item.id} className={file?.id === item.id ? 'active' : ''} onClick={() => chooseFile(item)}><FileSpreadsheet /><span><b>{item.name}</b><small>عُدّل {new Date(item.modifiedTime).toLocaleDateString('ar-EG')}</small></span>{file?.id === item.id && <Check />}</button>)}</div>
       </aside>
       <section className="data-panel">
         {!file && <div className="empty-state"><div><Table2 /></div><h2>اختر ملفاً للبدء</h2><p>ستظهر صفحات الملف وبياناته هنا مباشرة.</p></div>}
